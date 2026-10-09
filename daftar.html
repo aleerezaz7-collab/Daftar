@@ -1,937 +1,168 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>دفتر معاملات</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --gold: #C8A44A;
-    --gold-light: #E8C97A;
-    --dark: #1A1A1A;
-    --surface: #242424;
-    --surface2: #2E2E2E;
-    --border: #3A3A3A;
-    --text: #F0F0F0;
-    --text-muted: #888;
-    --green: #4CAF6E;
-    --red: #E05555;
-    --blue: #5599DD;
-  }
-
-  body {
-    font-family: Tahoma, 'Segoe UI', sans-serif;
-    background: var(--dark);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
-  }
-
-  /* NAV */
-  .nav {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 52px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .nav-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--gold);
-    letter-spacing: 0.5px;
-  }
-  .nav-tabs {
-    display: flex;
-    gap: 4px;
-  }
-  .nav-tab {
-    padding: 6px 14px;
-    border-radius: 6px;
-    border: none;
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    transition: all 0.15s;
-  }
-  .nav-tab.active {
-    background: var(--gold);
-    color: #000;
-    font-weight: bold;
-  }
-
-  /* PAGES */
-  .page { display: none; padding: 16px; }
-  .page.active { display: block; }
-
-  /* CARDS */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-  .card-title {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-  }
-
-  /* SUMMARY GRID */
-  .summary-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .summary-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    text-align: center;
-  }
-  .summary-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-  .summary-value { font-size: 16px; font-weight: bold; }
-  .summary-value.gold { color: var(--gold); }
-  .summary-value.green { color: var(--green); }
-  .summary-value.red { color: var(--red); }
-
-  /* CONTACTS LIST */
-  .contact-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: border-color 0.15s;
-  }
-  .contact-item:hover { border-color: var(--gold); }
-  .contact-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .contact-name { font-weight: bold; font-size: 15px; }
-  .contact-balance { font-size: 13px; font-weight: bold; }
-  .contact-balance.debt { color: var(--red); }
-  .contact-balance.credit { color: var(--green); }
-  .contact-balance.zero { color: var(--text-muted); }
-  .contact-meta { font-size: 11px; color: var(--text-muted); }
-
-  /* FORM */
-  .form-group { margin-bottom: 14px; }
-  .form-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
-  .form-input, .form-select {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .form-input:focus, .form-select:focus { border-color: var(--gold); }
-  .form-select option { background: var(--surface2); }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-  /* BUTTONS */
-  .btn {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: opacity 0.15s;
-  }
-  .btn:active { opacity: 0.8; }
-  .btn-gold { background: var(--gold); color: #000; }
-  .btn-green { background: var(--green); color: #000; }
-  .btn-red { background: var(--red); color: #fff; }
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-    margin-top: 8px;
-  }
-  .btn-sm {
-    width: auto;
-    padding: 6px 14px;
-    font-size: 12px;
-    border-radius: 6px;
-  }
-
-  /* SECTION HEADER */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .section-title { font-size: 15px; font-weight: bold; color: var(--gold); }
-
-  /* TRANSACTION ITEMS */
-  .tx-item {
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .tx-right {}
-  .tx-type { font-size: 12px; font-weight: bold; margin-bottom: 2px; }
-  .tx-type.buy { color: var(--blue); }
-  .tx-type.sell { color: var(--gold); }
-  .tx-type.payment { color: var(--green); }
-  .tx-detail { font-size: 11px; color: var(--text-muted); }
-  .tx-left { text-align: left; }
-  .tx-amount { font-weight: bold; font-size: 13px; }
-  .tx-date { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    align-items: flex-end;
-    justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border-radius: 20px 20px 0 0;
-    padding: 20px 16px 32px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    border-top: 2px solid var(--gold);
-  }
-  .modal-handle {
-    width: 40px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 0 auto 16px;
-  }
-  .modal-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 18px;
-    color: var(--gold);
-  }
-
-  /* PROFIT BADGE */
-  .profit-badge {
-    display: inline-block;
-    background: rgba(76,175,110,0.15);
-    border: 1px solid var(--green);
-    color: var(--green);
-    border-radius: 6px;
-    padding: 3px 8px;
-    font-size: 11px;
-    margin-top: 4px;
-  }
-
-  /* EMPTY */
-  .empty { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 13px; }
-
-  /* TYPE TOGGLE */
-  .type-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
-  .type-btn {
-    flex: 1; padding: 10px; border-radius: 8px;
-    border: 1px solid var(--border);
-    background: transparent; color: var(--text-muted);
-    font-family: inherit; font-size: 13px; cursor: pointer;
-    transition: all 0.15s;
-  }
-  .type-btn.active-buy { background: rgba(85,153,221,0.2); border-color: var(--blue); color: var(--blue); }
-  .type-btn.active-sell { background: rgba(200,164,74,0.2); border-color: var(--gold); color: var(--gold); }
-  .type-btn.active-pay { background: rgba(76,175,110,0.2); border-color: var(--green); color: var(--green); }
-
-  /* CALCULATED */
-  .calc-box {
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 12px;
-    margin: 12px 0;
-    font-size: 13px;
-  }
-  .calc-row { display: flex; justify-content: space-between; padding: 3px 0; }
-  .calc-row.total { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 8px; font-weight: bold; }
-  .calc-row.profit { color: var(--green); }
-
-  .divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-  /* Back button */
-  .back-btn {
-    background: transparent;
-    border: none;
-    color: var(--gold);
-    font-family: inherit;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 4px 0;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+:root{--bg:#1a1a1a;--card:#262626;--card2:#2f2f2f;--line:#3a3a3a;--gold:#c9a54b;--txt:#eee;--dim:#999;--red:#e05a5a;--green:#4caf7a;--blue:#5aa0e0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Vazirmatn,Tahoma,sans-serif;padding-bottom:40px}
+header{display:flex;align-items:center;gap:8px;padding:14px 16px 0;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap}
+h1{font-size:19px;color:var(--gold);margin:0 0 10px;width:100%}
+nav{display:flex;gap:6px;padding-bottom:10px;overflow-x:auto}
+nav button{background:none;border:0;color:var(--dim);font:inherit;padding:8px 14px;border-radius:10px;cursor:pointer}
+nav button.on{background:var(--gold);color:#111;font-weight:600}
+main{padding:16px;max-width:640px;margin:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.stat small{color:var(--dim);display:block;font-size:12px}
+.stat b{display:block;font-size:19px;margin:6px 0 2px;direction:ltr}
+.stat i{font-style:normal;color:var(--dim);font-size:11px}
+h2{font-size:16px;color:var(--gold);margin:18px 0 10px}
+.tx{background:var(--card2);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.tx .r{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.k-buy{color:var(--blue);font-weight:600}.k-sell{color:var(--gold);font-weight:600}
+.dim{color:var(--dim);font-size:12px}.red{color:var(--red)}.green{color:var(--green)}
+.big{font-size:16px;font-weight:600;direction:ltr}
+.acts{display:flex;gap:8px;margin-top:10px}
+.acts button{flex:1;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:6px;font:inherit;font-size:12px;cursor:pointer}
+.acts .del{color:var(--red)}
+.cta{width:100%;background:var(--gold);color:#111;border:0;border-radius:14px;padding:15px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;margin-top:6px}
+#modal{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:20}
+#modal.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px;border-top:2px solid var(--gold)}
+label{display:block;font-size:12px;color:var(--dim);margin:12px 0 4px}
+input,select{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px;font:inherit;font-size:15px}
+input.num{direction:ltr;text-align:left}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--dim);font:inherit;cursor:pointer}
+.seg button.on{background:var(--gold);color:#111;font-weight:600}
+.prev{margin-top:12px;padding:10px;border-radius:10px;background:var(--card);font-size:13px}
+.row2{display:flex;gap:10px}.row2>div{flex:1}
+.empty{color:var(--dim);text-align:center;padding:30px 0}
 </style>
 </head>
 <body>
-
-<div class="nav">
-  <span class="nav-title">📒 دفتر معاملات</span>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('home')">خانه</button>
-    <button class="nav-tab" onclick="showPage('contacts')">طرف‌ها</button>
-    <button class="nav-tab" onclick="showPage('deals')">معاملات</button>
-  </div>
-</div>
-
-<!-- HOME PAGE -->
-<div class="page active" id="page-home">
-  <div class="summary-grid">
-    <div class="summary-item">
-      <div class="summary-label">کل طلبکاری</div>
-      <div class="summary-value red" id="total-receivable">۰</div>
-      <div class="summary-label" style="margin-top:2px">تومان</div>
-    </div>
-    <div class="summary-item">
-      <div class="summary-label">کل بدهی</div>
-      <div class="summary-value gold" id="total-payable">۰</div>
-      <div class="summary-label" style="margin-top:2px">تومان</div>
-    </div>
-    <div class="summary-item">
-      <div class="summary-label">سود کل</div>
-      <div class="summary-value green" id="total-profit">۰</div>
-      <div class="summary-label" style="margin-top:2px">تومان</div>
-    </div>
-    <div class="summary-item">
-      <div class="summary-label">تعداد معاملات</div>
-      <div class="summary-value" id="total-deals">۰</div>
-    </div>
-  </div>
-
-  <div class="section-header">
-    <span class="section-title">آخرین تراکنش‌ها</span>
-  </div>
-  <div id="recent-list">
-    <div class="empty">هنوز معامله‌ای ثبت نشده</div>
-  </div>
-
-  <button class="btn btn-gold" style="margin-top:8px" onclick="openNewDeal()">+ ثبت معامله جدید</button>
-</div>
-
-<!-- CONTACTS PAGE -->
-<div class="page" id="page-contacts">
-  <div class="section-header">
-    <span class="section-title">طرف‌های حساب</span>
-    <button class="btn btn-gold btn-sm" onclick="openNewContact()">+ افزودن</button>
-  </div>
-  <div id="contacts-list">
-    <div class="empty">هیچ طرف حسابی ثبت نشده</div>
-  </div>
-</div>
-
-<!-- CONTACT DETAIL PAGE -->
-<div class="page" id="page-contact-detail">
-  <button class="back-btn" onclick="showPage('contacts')">→ برگشت</button>
-  <div id="contact-detail-content"></div>
-</div>
-
-<!-- DEALS PAGE -->
-<div class="page" id="page-deals">
-  <div class="section-header">
-    <span class="section-title">همه معاملات</span>
-    <button class="btn btn-gold btn-sm" onclick="openNewDeal()">+ جدید</button>
-  </div>
-  <div id="all-deals-list">
-    <div class="empty">هیچ معامله‌ای ثبت نشده</div>
-  </div>
-</div>
-
-<!-- MODAL: NEW DEAL -->
-<div class="modal-overlay" id="modal-deal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-deal-title">ثبت معامله جدید</div>
-
-    <div class="type-toggle">
-      <button class="type-btn active-buy" id="type-buy" onclick="setTxType('buy')">خرید</button>
-      <button class="type-btn" id="type-sell" onclick="setTxType('sell')">فروش</button>
-      <button class="type-btn" id="type-pay" onclick="setTxType('payment')">پرداخت</button>
-    </div>
-
-    <div id="deal-form-main">
-      <div class="form-group">
-        <label class="form-label">طرف حساب</label>
-        <select class="form-select" id="deal-contact">
-          <option value="">انتخاب کنید...</option>
-        </select>
-      </div>
-
-      <div id="trade-fields">
-        <div class="form-group">
-          <label class="form-label">نوع کالا</label>
-          <select class="form-select" id="deal-type">
-            <option value="gold_raw">آبشده (طلا)</option>
-            <option value="gold_made">ساخته (طلا)</option>
-            <option value="coin">سکه</option>
-            <option value="dollar">دلار</option>
-            <option value="other">سایر</option>
-          </select>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" id="qty-label">مقدار (گرم)</label>
-            <input class="form-input" type="number" id="deal-qty" placeholder="۰" oninput="calcDeal()">
-          </div>
-          <div class="form-group">
-            <label class="form-label" id="price-label">قیمت واحد (تومان)</label>
-            <input class="form-input" type="number" id="deal-price" placeholder="۰" oninput="calcDeal()">
-          </div>
-        </div>
-
-        <div class="calc-box" id="calc-preview" style="display:none">
-          <div class="calc-row">
-            <span id="calc-qty-label">مقدار</span>
-            <span id="calc-qty-val">-</span>
-          </div>
-          <div class="calc-row">
-            <span>قیمت واحد</span>
-            <span id="calc-price-val">-</span>
-          </div>
-          <div class="calc-row total">
-            <span>مبلغ کل</span>
-            <span id="calc-total">-</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">مبلغ پرداخت‌شده (تومان) — اختیاری</label>
-          <input class="form-input" type="number" id="deal-paid" placeholder="اگه ناقص پرداخت شده وارد کن" oninput="calcDeal()">
-        </div>
-
-        <div class="calc-box" id="remaining-preview" style="display:none">
-          <div class="calc-row">
-            <span>پرداخت شده</span>
-            <span id="calc-paid-val">-</span>
-          </div>
-          <div class="calc-row total">
-            <span id="remaining-label">مانده</span>
-            <span id="calc-remaining">-</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Payment only fields -->
-      <div id="payment-fields" style="display:none">
-        <div class="form-group">
-          <label class="form-label">مبلغ پرداخت (تومان)</label>
-          <input class="form-input" type="number" id="pay-amount" placeholder="۰">
-        </div>
-        <div class="form-group">
-          <label class="form-label">بابت (اختیاری)</label>
-          <input class="form-input" type="text" id="pay-desc" placeholder="مثلاً: بابت معامله طلا">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">توضیحات (اختیاری)</label>
-        <input class="form-input" type="text" id="deal-note" placeholder="یادداشت...">
-      </div>
-    </div>
-
-    <button class="btn btn-gold" onclick="saveDeal()">ثبت معامله</button>
-    <button class="btn btn-outline" onclick="closeModal('modal-deal')">انصراف</button>
-  </div>
-</div>
-
-<!-- MODAL: NEW CONTACT -->
-<div class="modal-overlay" id="modal-contact">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">افزودن طرف حساب</div>
-    <div class="form-group">
-      <label class="form-label">نام</label>
-      <input class="form-input" type="text" id="contact-name" placeholder="مثلاً: امیر / حسین‌آقا">
-    </div>
-    <div class="form-group">
-      <label class="form-label">شماره تماس (اختیاری)</label>
-      <input class="form-input" type="tel" id="contact-phone" placeholder="۰۹۱۲...">
-    </div>
-    <button class="btn btn-gold" onclick="saveContact()">افزودن</button>
-    <button class="btn btn-outline" onclick="closeModal('modal-contact')">انصراف</button>
-  </div>
-</div>
-
-<!-- MODAL: PAYMENT ON DEAL -->
-<div class="modal-overlay" id="modal-payment">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">ثبت پرداخت</div>
-    <div id="payment-deal-info" class="card" style="margin-bottom:14px; font-size:13px;"></div>
-    <div class="form-group">
-      <label class="form-label">مبلغ پرداخت (تومان)</label>
-      <input class="form-input" type="number" id="payment-amount" placeholder="۰">
-    </div>
-    <div class="form-group">
-      <label class="form-label">توضیح (اختیاری)</label>
-      <input class="form-input" type="text" id="payment-note" placeholder="">
-    </div>
-    <button class="btn btn-green" onclick="savePaymentOnDeal()">ثبت پرداخت</button>
-    <button class="btn btn-outline" onclick="closeModal('modal-payment')">انصراف</button>
-  </div>
-</div>
-
+<header><h1>📒 دفتر معاملات</h1>
+<nav id="nav"><button data-t="home" class="on">خانه</button><button data-t="txs">معاملات</button><button data-t="parties">طرف‌ها</button><button data-t="cash">صندوق</button></nav></header>
+<main id="view"></main>
+<div id="modal"><div class="sheet" id="sheet"></div></div>
+<datalist id="assets"><option value="دلار"><option value="طلای خام"><option value="طلای ساخته‌شده"><option value="سکه"></datalist>
+<datalist id="plist"></datalist>
 <script>
-// STATE
-let state = JSON.parse(localStorage.getItem('daftar_state') || 'null') || {
-  contacts: [],
-  deals: [],
-  nextId: 1
-};
+const KEY='daftar_v2';
+let S={tx:[]},tab='home',editId=null,form={};
+try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const P='۰۱۲۳۴۵۶۷۸۹';
+const nd=s=>String(s).replace(/[۰-۹]/g,d=>P.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,٬،\s]/g,'');
+const num=s=>parseFloat(nd(s))||0;
+const fa=n=>(Math.round(n*100)/100).toLocaleString('en-US').replace(/\d/g,d=>P[d]).replace(/-/g,'−');
+const today=()=>new Date().toLocaleDateString('fa-IR-u-nu-latn',{year:'numeric',month:'2-digit',day:'2-digit'});
+const $=s=>document.querySelector(s);
+const total=t=>t.amount*t.price, paid=t=>t.pays.reduce((a,p)=>a+p.amt,0), rem=t=>total(t)-paid(t);
+const profit=t=>t.type==='sell'&&t.buyPrice?(t.price-t.buyPrice)*t.amount:0;
 
-let currentTxType = 'buy';
-let currentPaymentDealId = null;
-let currentContactId = null;
-
-function save() {
-  localStorage.setItem('daftar_state', JSON.stringify(state));
-}
-
-// HELPERS
-function formatNum(n) {
-  if (!n && n !== 0) return '-';
-  return Math.abs(n).toLocaleString('fa-IR');
-}
-
-function today() {
-  return new Date().toLocaleDateString('fa-IR');
-}
-
-function getContact(id) {
-  return state.contacts.find(c => c.id === id);
-}
-
-function getDeal(id) {
-  return state.deals.find(d => d.id === id);
-}
-
-function getContactBalance(contactId) {
-  // positive = they owe me, negative = I owe them
-  let balance = 0;
-  state.deals.forEach(d => {
-    if (d.contactId !== contactId) return;
-    if (d.txType === 'buy') {
-      // I bought from them → I owe them
-      balance -= d.total;
-      balance += (d.paid || 0);
-    } else if (d.txType === 'sell') {
-      // They bought from me → they owe me
-      balance += d.total;
-      balance -= (d.paid || 0);
-    } else if (d.txType === 'payment') {
-      // standalone payment
-      if (d.direction === 'received') balance += d.payAmount;
-      else balance -= d.payAmount;
-    }
+function stats(){
+  let cred=0,debt=0,pr=0,cash=0,inv={},par={};
+  S.tx.forEach(t=>{
+    const r=rem(t),p=paid(t);
+    if(t.type==='sell'){cred+=r;cash+=p;pr+=profit(t);inv[t.asset]=(inv[t.asset]||0)-t.amount;par[t.party]=(par[t.party]||0)+r}
+    else{debt+=r;cash-=p;inv[t.asset]=(inv[t.asset]||0)+t.amount;par[t.party]=(par[t.party]||0)-r}
   });
-  // deal payments
-  state.deals.forEach(d => {
-    if (d.contactId !== contactId) return;
-    (d.payments || []).forEach(p => {
-      if (d.txType === 'sell') balance -= p.amount;
-      else if (d.txType === 'buy') balance += p.amount;
-    });
-  });
-  return balance;
+  return{cred,debt,pr,cash,inv,par};
 }
-
-function typeLabel(t) {
-  return {gold_raw:'آبشده',gold_made:'ساخته',coin:'سکه',dollar:'دلار',other:'سایر'}[t] || t;
+function txCard(t){
+  const r=rem(t),isS=t.type==='sell',pf=profit(t);
+  return `<div class="tx"><div class="r"><span class="${isS?'k-sell':'k-buy'}">${isS?'فروش':'خرید'} ${t.asset}</span><span class="big">${fa(total(t))} ت</span></div>
+  <div class="r dim"><span>${t.party} — ${fa(t.amount)} × ${fa(t.price)}</span><span>${nd(t.date).replace(/\d/g,d=>P[d])}</span></div>
+  <div class="r" style="margin-top:6px"><span class="${r>0?'red':'green'} dim">${r>0?'مانده: '+fa(r):'تسویه'}</span>${isS&&t.buyPrice?`<span class="${pf>=0?'green':'red'} dim">سود: ${fa(pf)}</span>`:''}</div>
+  <div class="acts"><button data-a="pay" data-id="${t.id}">${isS?'دریافت':'پرداخت'}</button><button data-a="edit" data-id="${t.id}">ویرایش</button><button class="del" data-a="del" data-id="${t.id}">حذف</button></div></div>`;
 }
-
-function unitLabel(t) {
-  if (t === 'dollar') return 'دلار';
-  if (t === 'coin') return 'عدد';
-  return 'گرم';
-}
-
-// PAGE NAV
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  const tabs = {'home':0,'contacts':1,'deals':2};
-  if (tabs[id] !== undefined) {
-    document.querySelectorAll('.nav-tab')[tabs[id]].classList.add('active');
+function render(){
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+  $('#plist').innerHTML=[...new Set(S.tx.map(t=>t.party))].map(p=>`<option value="${p}">`).join('');
+  const s=stats(),L=[...S.tx].reverse();let h='';
+  if(tab==='home'){
+    h=`<div class="grid">
+    <div class="stat"><small>کل طلبکاری</small><b class="${s.cred>0?'red':''}">${fa(s.cred)}</b><i>تومان</i></div>
+    <div class="stat"><small>کل بدهی</small><b>${fa(s.debt)}</b><i>تومان</i></div>
+    <div class="stat"><small>سود کل</small><b class="${s.pr>=0?'green':'red'}">${fa(s.pr)}</b><i>تومان</i></div>
+    <div class="stat"><small>تعداد معاملات</small><b>${fa(S.tx.length)}</b><i>&nbsp;</i></div></div>
+    <h2>آخرین تراکنش‌ها</h2>${L.slice(0,5).map(txCard).join('')||'<div class="empty">هنوز معامله‌ای ثبت نشده.</div>'}
+    <button class="cta" data-a="new">+ ثبت معامله جدید</button>`;
+  }else if(tab==='txs'){
+    h=`<button class="cta" data-a="new" style="margin:0 0 14px">+ ثبت معامله جدید</button>`+(L.map(txCard).join('')||'<div class="empty">معامله‌ای نیست.</div>');
+  }else if(tab==='parties'){
+    const ks=Object.keys(s.par);
+    h=ks.map(k=>{const v=s.par[k];return `<div class="tx"><div class="r"><b>${k}</b><span class="big ${v>0?'red':v<0?'green':''}">${fa(Math.abs(v))} ت</span></div><div class="dim">${v>0?'از او طلبکارید':v<0?'به او بدهکارید':'تسویه'}</div></div>`}).join('')||'<div class="empty">هنوز طرفی ثبت نشده.</div>';
+  }else{
+    h=`<div class="grid"><div class="stat" style="grid-column:1/-1"><small>موجودی نقد صندوق</small><b class="${s.cash>=0?'green':'red'}">${fa(s.cash)}</b><i>تومان (دریافتی‌ها منهای پرداختی‌ها)</i></div>
+    <div class="stat" style="grid-column:1/-1"><small>سود ثبت‌شده از معاملات</small><b class="green">${fa(s.pr)}</b><i>تومان</i></div></div>
+    <h2>موجودی دارایی‌ها</h2>`+(Object.keys(s.inv).map(k=>`<div class="tx"><div class="r"><b>${k}</b><span class="big">${fa(s.inv[k])}</span></div></div>`).join('')||'<div class="empty">موجودی‌ای نیست.</div>');
   }
-  if (id === 'home') renderHome();
-  if (id === 'contacts') renderContacts();
-  if (id === 'deals') renderDeals();
+  $('#view').innerHTML=h;
 }
-
-// MODALS
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// NEW DEAL MODAL
-function openNewDeal(contactId) {
-  setTxType('buy');
-  document.getElementById('deal-qty').value = '';
-  document.getElementById('deal-price').value = '';
-  document.getElementById('deal-paid').value = '';
-  document.getElementById('deal-note').value = '';
-  document.getElementById('pay-amount').value = '';
-  document.getElementById('pay-desc').value = '';
-  document.getElementById('calc-preview').style.display = 'none';
-  document.getElementById('remaining-preview').style.display = 'none';
-  populateContactSelect(contactId);
-  openModal('modal-deal');
+function openForm(id){
+  editId=id;const t=S.tx.find(x=>x.id===id);
+  form=t?{...t}:{type:'buy',asset:'دلار',party:'',amount:'',price:'',buyPrice:'',date:today(),link:''};
+  drawForm();$('#modal').classList.add('on');
 }
-
-function populateContactSelect(selectedId) {
-  const sel = document.getElementById('deal-contact');
-  sel.innerHTML = '<option value="">انتخاب کنید...</option>';
-  state.contacts.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = c.name;
-    if (c.id === selectedId) opt.selected = true;
-    sel.appendChild(opt);
-  });
+function drawForm(){
+  const f=form,isS=f.type==='sell';
+  const buys=S.tx.filter(t=>t.type==='buy'&&t.asset===f.asset&&t.id!==editId);
+  $('#sheet').innerHTML=`<div class="seg"><button data-ty="buy" class="${!isS?'on':''}">خرید</button><button data-ty="sell" class="${isS?'on':''}">فروش</button></div>
+  <label>دارایی</label><input id="f_asset" list="assets" value="${f.asset}">
+  <label>طرف حساب</label><input id="f_party" list="plist" value="${f.party}">
+  <div class="row2"><div><label>مقدار</label><input id="f_amount" class="num" inputmode="decimal" value="${f.amount}"></div>
+  <div><label>قیمت واحد (تومان)</label><input id="f_price" class="num" inputmode="decimal" value="${f.price}"></div></div>
+  ${isS?`<label>از کدام خرید؟ (برای محاسبه سود)</label><select id="f_link"><option value="">انتخاب دستی</option>${buys.map(b=>`<option value="${b.id}" ${f.link==b.id?'selected':''}>${b.party} — ${fa(b.amount)} با قیمت ${fa(b.price)}</option>`).join('')}</select>
+  <label>قیمت خرید واحد (تومان)</label><input id="f_buyPrice" class="num" inputmode="decimal" value="${f.buyPrice}">`:''}
+  ${editId?'':`<label>پرداخت/دریافت نقدی همین الان (تومان)</label><input id="f_paid" class="num" inputmode="decimal" value="">`}
+  <label>تاریخ</label><input id="f_date" class="num" value="${f.date}">
+  <div class="prev" id="prev"></div>
+  <button class="cta" data-a="save">ذخیره</button><button class="cta" data-a="close" style="background:var(--card);color:var(--txt);font-weight:400">انصراف</button>`;
+  document.querySelectorAll('.num').forEach(i=>{if(i.id!=='f_date'){fmt(i)}});
+  prev();
 }
-
-function setTxType(type) {
-  currentTxType = type;
-  ['buy','sell','pay'].forEach(t => {
-    document.getElementById('type-' + (t==='pay'?'pay':t)).className = 'type-btn';
-  });
-  if (type === 'buy') {
-    document.getElementById('type-buy').classList.add('active-buy');
-    document.getElementById('trade-fields').style.display = 'block';
-    document.getElementById('payment-fields').style.display = 'none';
-    document.getElementById('qty-label').textContent = 'مقدار';
-    document.getElementById('price-label').textContent = 'قیمت خرید واحد (تومان)';
-  } else if (type === 'sell') {
-    document.getElementById('type-sell').classList.add('active-sell');
-    document.getElementById('trade-fields').style.display = 'block';
-    document.getElementById('payment-fields').style.display = 'none';
-    document.getElementById('qty-label').textContent = 'مقدار';
-    document.getElementById('price-label').textContent = 'قیمت فروش واحد (تومان)';
-  } else {
-    document.getElementById('type-pay').classList.add('active-pay');
-    document.getElementById('trade-fields').style.display = 'none';
-    document.getElementById('payment-fields').style.display = 'block';
-  }
+function fmt(i){let v=nd(i.value).replace(/[^\d.]/g,'');let [a,b]=v.split('.');a=(a||'').replace(/\B(?=(\d{3})+(?!\d))/g,',');i.value=(a+(b!==undefined?'.'+b:'')).replace(/\d/g,d=>P[d]);}
+function prev(){
+  const a=num($('#f_amount').value),p=num($('#f_price').value),bp=$('#f_buyPrice')?num($('#f_buyPrice').value):0;
+  let h=`مبلغ کل: <b>${fa(a*p)}</b> تومان`;
+  if(form.type==='sell'&&bp)h+=`<br>سود این معامله: <b class="${p>=bp?'green':'red'}">${fa((p-bp)*a)}</b> تومان`;
+  $('#prev').innerHTML=h;
 }
-
-function calcDeal() {
-  const qty = parseFloat(document.getElementById('deal-qty').value) || 0;
-  const price = parseFloat(document.getElementById('deal-price').value) || 0;
-  const paid = parseFloat(document.getElementById('deal-paid').value) || 0;
-  const type = document.getElementById('deal-type').value;
-  const ul = unitLabel(type);
-
-  if (qty && price) {
-    const total = qty * price;
-    document.getElementById('calc-preview').style.display = 'block';
-    document.getElementById('calc-qty-label').textContent = 'مقدار (' + ul + ')';
-    document.getElementById('calc-qty-val').textContent = formatNum(qty) + ' ' + ul;
-    document.getElementById('calc-price-val').textContent = formatNum(price) + ' تومان';
-    document.getElementById('calc-total').textContent = formatNum(total) + ' تومان';
-
-    if (paid > 0) {
-      document.getElementById('remaining-preview').style.display = 'block';
-      const remaining = total - paid;
-      document.getElementById('calc-paid-val').textContent = formatNum(paid) + ' تومان';
-      document.getElementById('remaining-label').textContent = remaining >= 0 ? 'مانده (بدهکار)' : 'اضافه پرداخت';
-      document.getElementById('calc-remaining').textContent = formatNum(Math.abs(remaining)) + ' تومان';
-    } else {
-      document.getElementById('remaining-preview').style.display = 'none';
-    }
-  } else {
-    document.getElementById('calc-preview').style.display = 'none';
-    document.getElementById('remaining-preview').style.display = 'none';
-  }
+function read(){
+  const g=id=>$('#'+id)?$('#'+id).value:'';
+  Object.assign(form,{asset:g('f_asset').trim(),party:g('f_party').trim(),amount:num(g('f_amount')),price:num(g('f_price')),buyPrice:num(g('f_buyPrice')),date:g('f_date'),link:g('f_link')});
 }
-
-function saveDeal() {
-  const contactId = parseInt(document.getElementById('deal-contact').value);
-  if (!contactId) { alert('طرف حساب را انتخاب کنید'); return; }
-
-  const deal = {
-    id: state.nextId++,
-    contactId,
-    date: today(),
-    txType: currentTxType,
-    note: document.getElementById('deal-note').value,
-    payments: []
-  };
-
-  if (currentTxType !== 'payment') {
-    const qty = parseFloat(document.getElementById('deal-qty').value);
-    const price = parseFloat(document.getElementById('deal-price').value);
-    if (!qty || !price) { alert('مقدار و قیمت را وارد کنید'); return; }
-    deal.goodsType = document.getElementById('deal-type').value;
-    deal.qty = qty;
-    deal.price = price;
-    deal.total = qty * price;
-    deal.paid = parseFloat(document.getElementById('deal-paid').value) || 0;
-  } else {
-    const amt = parseFloat(document.getElementById('pay-amount').value);
-    if (!amt) { alert('مبلغ را وارد کنید'); return; }
-    deal.payAmount = amt;
-    deal.payDesc = document.getElementById('pay-desc').value;
-  }
-
-  state.deals.unshift(deal);
-  save();
-  closeModal('modal-deal');
-  renderHome();
-  if (document.getElementById('page-contact-detail').classList.contains('active')) {
-    showContactDetail(currentContactId);
-  }
+function saveTx(){
+  read();
+  if(!form.asset||!form.party||form.amount<=0||form.price<=0){alert('دارایی، طرف حساب، مقدار و قیمت را وارد کن.');return}
+  if(editId){const t=S.tx.find(x=>x.id===editId);Object.assign(t,{type:form.type,asset:form.asset,party:form.party,amount:form.amount,price:form.price,buyPrice:form.type==='sell'?form.buyPrice:0,date:form.date,link:form.link});}
+  else{const p=num($('#f_paid').value);S.tx.push({id:Date.now(),type:form.type,asset:form.asset,party:form.party,amount:form.amount,price:form.price,buyPrice:form.type==='sell'?form.buyPrice:0,date:form.date,link:form.link,pays:p>0?[{amt:p,date:form.date}]:[]});}
+  save();$('#modal').classList.remove('on');render();
 }
-
-// NEW CONTACT
-function openNewContact() {
-  document.getElementById('contact-name').value = '';
-  document.getElementById('contact-phone').value = '';
-  openModal('modal-contact');
-}
-
-function saveContact() {
-  const name = document.getElementById('contact-name').value.trim();
-  if (!name) { alert('نام را وارد کنید'); return; }
-  state.contacts.push({ id: state.nextId++, name, phone: document.getElementById('contact-phone').value });
-  save();
-  closeModal('modal-contact');
-  renderContacts();
-}
-
-// PAYMENT ON DEAL
-function openPaymentModal(dealId) {
-  currentPaymentDealId = dealId;
-  const deal = getDeal(dealId);
-  const contact = getContact(deal.contactId);
-  const paid = (deal.paid || 0) + (deal.payments || []).reduce((a,p)=>a+p.amount,0);
-  const remaining = deal.total - paid;
-  document.getElementById('payment-deal-info').innerHTML =
-    `<b>${contact.name}</b> — ${typeLabel(deal.goodsType)}<br>
-     مبلغ کل: ${formatNum(deal.total)} تومان<br>
-     پرداخت شده: ${formatNum(paid)} تومان<br>
-     <b>مانده: ${formatNum(remaining)} تومان</b>`;
-  document.getElementById('payment-amount').value = '';
-  document.getElementById('payment-note').value = '';
-  openModal('modal-payment');
-}
-
-function savePaymentOnDeal() {
-  const amount = parseFloat(document.getElementById('payment-amount').value);
-  if (!amount) { alert('مبلغ را وارد کنید'); return; }
-  const deal = getDeal(currentPaymentDealId);
-  if (!deal.payments) deal.payments = [];
-  deal.payments.push({ amount, note: document.getElementById('payment-note').value, date: today() });
-  save();
-  closeModal('modal-payment');
-  showContactDetail(deal.contactId);
-}
-
-// RENDER HOME
-function renderHome() {
-  let totalReceivable = 0, totalPayable = 0, totalProfit = 0;
-  state.contacts.forEach(c => {
-    const bal = getContactBalance(c.id);
-    if (bal > 0) totalReceivable += bal;
-    else totalPayable += Math.abs(bal);
-  });
-
-  // profit: sum of (sell price - buy price)*qty for matched types — simplified: just sell margins
-  state.deals.forEach(d => {
-    if (d.txType === 'sell') {
-      // can't easily match buys, show 0 for now — user sets price themselves
-    }
-  });
-
-  document.getElementById('total-receivable').textContent = formatNum(totalReceivable);
-  document.getElementById('total-payable').textContent = formatNum(totalPayable);
-  document.getElementById('total-deals').textContent = state.deals.filter(d=>d.txType!=='payment').length.toLocaleString('fa-IR');
-
-  const recentList = document.getElementById('recent-list');
-  const recent = state.deals.slice(0, 5);
-  if (!recent.length) {
-    recentList.innerHTML = '<div class="empty">هنوز معامله‌ای ثبت نشده</div>';
-    return;
-  }
-  recentList.innerHTML = recent.map(d => renderDealItem(d)).join('');
-}
-
-function renderDealItem(d) {
-  const c = getContact(d.contactId);
-  if (!c) return '';
-  if (d.txType === 'payment') {
-    return `<div class="tx-item">
-      <div class="tx-right">
-        <div class="tx-type payment">پرداخت</div>
-        <div class="tx-detail">${c.name}${d.payDesc ? ' — ' + d.payDesc : ''}</div>
-        <div class="tx-detail">${d.date}</div>
-      </div>
-      <div class="tx-left">
-        <div class="tx-amount" style="color:var(--green)">${formatNum(d.payAmount)} ت</div>
-      </div>
-    </div>`;
-  }
-  const paid = (d.paid||0) + (d.payments||[]).reduce((a,p)=>a+p.amount,0);
-  const remaining = d.total - paid;
-  return `<div class="tx-item">
-    <div class="tx-right">
-      <div class="tx-type ${d.txType}">${d.txType==='buy'?'خرید':'فروش'} ${typeLabel(d.goodsType)}</div>
-      <div class="tx-detail">${c.name} — ${formatNum(d.qty)} ${unitLabel(d.goodsType)}</div>
-      <div class="tx-detail">${d.date}</div>
-    </div>
-    <div class="tx-left">
-      <div class="tx-amount">${formatNum(d.total)} ت</div>
-      ${remaining > 0 ? `<div class="tx-date" style="color:var(--red)">مانده: ${formatNum(remaining)}</div>` : `<div class="tx-date" style="color:var(--green)">تسویه</div>`}
-    </div>
-  </div>`;
-}
-
-// RENDER CONTACTS
-function renderContacts() {
-  const list = document.getElementById('contacts-list');
-  if (!state.contacts.length) {
-    list.innerHTML = '<div class="empty">هیچ طرف حسابی ثبت نشده</div>';
-    return;
-  }
-  list.innerHTML = state.contacts.map(c => {
-    const bal = getContactBalance(c.id);
-    let balClass = 'zero', balText = 'تسویه';
-    if (bal > 0) { balClass = 'red'; balText = 'بدهکار: ' + formatNum(bal) + ' ت'; }
-    else if (bal < 0) { balClass = 'credit'; balText = 'بستانکار: ' + formatNum(Math.abs(bal)) + ' ت'; }
-    const dealCount = state.deals.filter(d => d.contactId === c.id).length;
-    return `<div class="contact-item" onclick="showContactDetail(${c.id})">
-      <div class="contact-header">
-        <span class="contact-name">${c.name}</span>
-        <span class="contact-balance ${balClass}">${balText}</span>
-      </div>
-      <div class="contact-meta">${dealCount} تراکنش${c.phone ? ' · ' + c.phone : ''}</div>
-    </div>`;
-  }).join('');
-}
-
-// CONTACT DETAIL
-function showContactDetail(contactId) {
-  currentContactId = contactId;
-  const c = getContact(contactId);
-  const bal = getContactBalance(contactId);
-  let balText = 'تسویه', balColor = 'var(--text-muted)';
-  if (bal > 0) { balText = 'بدهکار: ' + formatNum(bal) + ' تومان'; balColor = 'var(--red)'; }
-  else if (bal < 0) { balText = 'بستانکار: ' + formatNum(Math.abs(bal)) + ' تومان'; balColor = 'var(--green)'; }
-
-  const deals = state.deals.filter(d => d.contactId === contactId);
-
-  let html = `
-    <div class="card">
-      <div style="font-size:18px;font-weight:bold;margin-bottom:6px">${c.name}</div>
-      ${c.phone ? `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">${c.phone}</div>` : ''}
-      <div style="font-size:15px;font-weight:bold;color:${balColor}">${balText}</div>
-    </div>
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <button class="btn btn-gold" style="flex:1" onclick="openNewDeal(${contactId})">+ معامله جدید</button>
-    </div>
-    <div class="section-title" style="margin-bottom:10px">تاریخچه</div>`;
-
-  if (!deals.length) {
-    html += '<div class="empty">هیچ معامله‌ای ثبت نشده</div>';
-  } else {
-    deals.forEach(d => {
-      if (d.txType === 'payment') {
-        html += `<div class="tx-item">
-          <div class="tx-right">
-            <div class="tx-type payment">پرداخت</div>
-            <div class="tx-detail">${d.payDesc || ''} · ${d.date}</div>
-          </div>
-          <div class="tx-left"><div class="tx-amount" style="color:var(--green)">${formatNum(d.payAmount)} ت</div></div>
-        </div>`;
-      } else {
-        const paid = (d.paid||0) + (d.payments||[]).reduce((a,p)=>a+p.amount,0);
-        const remaining = d.total - paid;
-        html += `<div class="card" style="padding:12px">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-            <span class="tx-type ${d.txType}" style="font-weight:bold">${d.txType==='buy'?'خرید':'فروش'} ${typeLabel(d.goodsType)}</span>
-            <span style="font-size:11px;color:var(--text-muted)">${d.date}</span>
-          </div>
-          <div style="font-size:13px;margin-bottom:8px">
-            ${formatNum(d.qty)} ${unitLabel(d.goodsType)} × ${formatNum(d.price)} = <b>${formatNum(d.total)} تومان</b>
-          </div>`;
-
-        if ((d.payments||[]).length || d.paid) {
-          html += `<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">`;
-          if (d.paid) html += `پرداخت اولیه: ${formatNum(d.paid)} ت<br>`;
-          (d.payments||[]).forEach(p => {
-            html += `${p.date}: ${formatNum(p.amount)} ت${p.note?' — '+p.note:''}<br>`;
-          });
-          html += `</div>`;
-        }
-
-        if (remaining > 0) {
-          html += `<div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="color:var(--red);font-size:13px;font-weight:bold">مانده: ${formatNum(remaining)} تومان</span>
-            <button class="btn btn-green btn-sm" onclick="openPaymentModal(${d.id})">ثبت پرداخت</button>
-          </div>`;
-        } else {
-          html += `<span style="color:var(--green);font-size:12px">✓ تسویه شده</span>`;
-        }
-        if (d.note) html += `<div style="font-size:11px;color:var(--text-muted);margin-top:6px">${d.note}</div>`;
-        html += `</div>`;
-      }
-    });
-  }
-
-  document.getElementById('contact-detail-content').innerHTML = html;
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-contact-detail').classList.add('active');
-}
-
-// RENDER ALL DEALS
-function renderDeals() {
-  const list = document.getElementById('all-deals-list');
-  if (!state.deals.length) {
-    list.innerHTML = '<div class="empty">هیچ معامله‌ای ثبت نشده</div>';
-    return;
-  }
-  list.innerHTML = state.deals.map(d => renderDealItem(d)).join('');
-}
-
-// INIT
-document.getElementById('deal-type').addEventListener('change', () => {
-  const t = document.getElementById('deal-type').value;
-  document.getElementById('qty-label').textContent = 'مقدار (' + unitLabel(t) + ')';
-  calcDeal();
+document.addEventListener('input',e=>{
+  if(e.target.classList.contains('num')&&e.target.id!=='f_date')fmt(e.target);
+  if(e.target.closest('#sheet')){if(e.target.id==='f_link'){const b=S.tx.find(x=>x.id==e.target.value);if(b){$('#f_buyPrice').value=b.price;fmt($('#f_buyPrice'))}}prev();}
 });
-
-renderHome();
+document.addEventListener('change',e=>{if(e.target.id==='f_asset'){read();drawForm()}});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.t){tab=b.dataset.t;render();return}
+  if(b.dataset.ty){read();form.type=b.dataset.ty;drawForm();return}
+  const a=b.dataset.a,id=+b.dataset.id;
+  if(a==='new')openForm(null);
+  else if(a==='close')$('#modal').classList.remove('on');
+  else if(a==='save')saveTx();
+  else if(a==='edit')openForm(id);
+  else if(a==='del'){if(confirm('این معامله حذف شود؟ این کار قابل بازگشت نیست.')){S.tx=S.tx.filter(x=>x.id!==id);save();render();}}
+  else if(a==='pay'){const t=S.tx.find(x=>x.id===id);const v=num(prompt('مبلغ (تومان) — مانده: '+fa(rem(t))));if(v>0){t.pays.push({amt:v,date:today()});save();render();}}
+});
+render();
 </script>
 </body>
 </html>
