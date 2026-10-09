@@ -2,17 +2,21 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="دفتر">
+<meta name="theme-color" content="#1a1a1a">
 <title>دفتر معاملات</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#1a1a1a;--card:#262626;--card2:#2f2f2f;--line:#3a3a3a;--gold:#c9a54b;--txt:#eee;--dim:#999;--red:#e05a5a;--green:#4caf7a;--blue:#5aa0e0}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:Vazirmatn,Tahoma,sans-serif;padding-bottom:40px}
-header{display:flex;align-items:center;gap:8px;padding:14px 16px 0;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap}
-h1{font-size:19px;color:var(--gold);margin:0 0 10px;width:100%}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Vazirmatn,Tahoma,sans-serif;padding-bottom:50px}
+header{padding:calc(14px + env(safe-area-inset-top)) 16px 0;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+h1{font-size:19px;color:var(--gold);margin:0 0 10px}
 nav{display:flex;gap:6px;padding-bottom:10px;overflow-x:auto}
-nav button{background:none;border:0;color:var(--dim);font:inherit;padding:8px 14px;border-radius:10px;cursor:pointer}
+nav button{background:none;border:0;color:var(--dim);font:inherit;padding:8px 14px;border-radius:10px;cursor:pointer;white-space:nowrap}
 nav button.on{background:var(--gold);color:#111;font-weight:600}
 main{padding:16px;max-width:640px;margin:auto}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
@@ -22,26 +26,32 @@ main{padding:16px;max-width:640px;margin:auto}
 .stat i{font-style:normal;color:var(--dim);font-size:11px}
 h2{font-size:16px;color:var(--gold);margin:18px 0 10px}
 .tx{background:var(--card2);border-radius:14px;padding:12px 14px;margin-bottom:10px}
-.tx .r{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.tx.pair{border-right:3px solid var(--gold)}
+.tx .r{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-top:3px}
 .k-buy{color:var(--blue);font-weight:600}.k-sell{color:var(--gold);font-weight:600}
 .dim{color:var(--dim);font-size:12px}.red{color:var(--red)}.green{color:var(--green)}
 .big{font-size:16px;font-weight:600;direction:ltr}
 .acts{display:flex;gap:8px;margin-top:10px}
-.acts button{flex:1;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:6px;font:inherit;font-size:12px;cursor:pointer}
+.acts button{flex:1;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:7px;font:inherit;font-size:12px;cursor:pointer}
 .acts .del{color:var(--red)}
-.cta{width:100%;background:var(--gold);color:#111;border:0;border-radius:14px;padding:15px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;margin-top:6px}
+.cta{width:100%;background:var(--gold);color:#111;border:0;border-radius:14px;padding:15px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;margin-top:8px}
+.cta.alt{background:var(--card);color:var(--gold);border:1px solid var(--gold)}
+.cta.ghost{background:var(--card);color:var(--txt);font-weight:400}
 #modal{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:20}
 #modal.on{display:flex}
 .sheet{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px;border-top:2px solid var(--gold)}
+.sheet h3{margin:0 0 4px;color:var(--gold);font-size:16px}
 label{display:block;font-size:12px;color:var(--dim);margin:12px 0 4px}
-input,select{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px;font:inherit;font-size:15px}
+input,select,textarea{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px;font:inherit;font-size:15px}
 input.num{direction:ltr;text-align:left}
 .seg{display:flex;gap:8px}
 .seg button{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--dim);font:inherit;cursor:pointer}
 .seg button.on{background:var(--gold);color:#111;font-weight:600}
-.prev{margin-top:12px;padding:10px;border-radius:10px;background:var(--card);font-size:13px}
+.prev{margin-top:12px;padding:10px;border-radius:10px;background:var(--card);font-size:13px;line-height:1.9}
 .row2{display:flex;gap:10px}.row2>div{flex:1}
 .empty{color:var(--dim);text-align:center;padding:30px 0}
+#q{margin-bottom:14px}
+.note{font-size:12px;color:var(--dim);margin-top:6px;line-height:1.8}
 </style>
 </head>
 <body>
@@ -53,82 +63,118 @@ input.num{direction:ltr;text-align:left}
 <datalist id="plist"></datalist>
 <script>
 const KEY='daftar_v2';
-let S={tx:[]},tab='home',editId=null,form={};
+let S={tx:[]},tab='home',editId=null,form={},q='',payCtx=null;
 try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const P='۰۱۲۳۴۵۶۷۸۹';
 const nd=s=>String(s).replace(/[۰-۹]/g,d=>P.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,٬،\s]/g,'');
 const num=s=>parseFloat(nd(s))||0;
 const fa=n=>(Math.round(n*100)/100).toLocaleString('en-US').replace(/\d/g,d=>P[d]).replace(/-/g,'−');
+const pd=s=>String(s).replace(/\d/g,d=>P[d]);
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const today=()=>new Date().toLocaleDateString('fa-IR-u-nu-latn',{year:'numeric',month:'2-digit',day:'2-digit'});
 const $=s=>document.querySelector(s);
 const total=t=>t.amount*t.price, paid=t=>t.pays.reduce((a,p)=>a+p.amt,0), rem=t=>total(t)-paid(t);
 const profit=t=>t.type==='sell'&&t.buyPrice?(t.price-t.buyPrice)*t.amount:0;
+const legs=pid=>({b:S.tx.find(t=>t.pairId===pid&&t.type==='buy'),s:S.tx.find(t=>t.pairId===pid&&t.type==='sell')});
 
 function stats(){
   let cred=0,debt=0,pr=0,cash=0,inv={},par={};
   S.tx.forEach(t=>{
     const r=rem(t),p=paid(t);
-    if(t.type==='sell'){cred+=r;cash+=p;pr+=profit(t);inv[t.asset]=(inv[t.asset]||0)-t.amount;par[t.party]=(par[t.party]||0)+r}
-    else{debt+=r;cash-=p;inv[t.asset]=(inv[t.asset]||0)+t.amount;par[t.party]=(par[t.party]||0)-r}
+    if(t.type==='sell'){cred+=Math.max(r,0);debt+=Math.max(-r,0);cash+=p;pr+=profit(t);inv[t.asset]=(inv[t.asset]||0)-t.amount;par[t.party]=(par[t.party]||0)+r}
+    else{debt+=Math.max(r,0);cred+=Math.max(-r,0);cash-=p;inv[t.asset]=(inv[t.asset]||0)+t.amount;par[t.party]=(par[t.party]||0)-r}
   });
   return{cred,debt,pr,cash,inv,par};
 }
+function remLine(t){
+  const r=rem(t),isS=t.type==='sell';
+  if(Math.abs(r)<0.005)return `<span class="green dim">${t.party}: تسویه</span>`;
+  if(isS)return r>0?`<span class="red dim">${t.party} بدهکار شماست: ${fa(r)}</span>`:`<span class="dim">به ${t.party} بدهکارید: ${fa(-r)}</span>`;
+  return r>0?`<span class="red dim">به ${t.party} بدهکارید: ${fa(r)}</span>`:`<span class="green dim">${t.party} بدهکار شماست: ${fa(-r)}</span>`;
+}
 function txCard(t){
-  const r=rem(t),isS=t.type==='sell',pf=profit(t);
-  return `<div class="tx"><div class="r"><span class="${isS?'k-sell':'k-buy'}">${isS?'فروش':'خرید'} ${t.asset}</span><span class="big">${fa(total(t))} ت</span></div>
-  <div class="r dim"><span>${t.party} — ${fa(t.amount)} × ${fa(t.price)}</span><span>${nd(t.date).replace(/\d/g,d=>P[d])}</span></div>
-  <div class="r" style="margin-top:6px"><span class="${r>0?'red':'green'} dim">${r>0?'مانده: '+fa(r):'تسویه'}</span>${isS&&t.buyPrice?`<span class="${pf>=0?'green':'red'} dim">سود: ${fa(pf)}</span>`:''}</div>
+  const isS=t.type==='sell',pf=profit(t);
+  return `<div class="tx"><div class="r"><span class="${isS?'k-sell':'k-buy'}">${isS?'فروش':'خرید'} ${esc(t.asset)}</span><span class="big">${fa(total(t))} ت</span></div>
+  <div class="r dim"><span>${esc(t.party)} — ${fa(t.amount)} × ${fa(t.price)}</span><span>${pd(t.date)}</span></div>
+  <div class="r">${remLine(t)}${isS&&t.buyPrice?`<span class="${pf>=0?'green':'red'} dim">سود: ${fa(pf)}</span>`:''}</div>
   <div class="acts"><button data-a="pay" data-id="${t.id}">${isS?'دریافت':'پرداخت'}</button><button data-a="edit" data-id="${t.id}">ویرایش</button><button class="del" data-a="del" data-id="${t.id}">حذف</button></div></div>`;
 }
+function pairCard(b,s){
+  const pf=profit(s);
+  return `<div class="tx pair"><div class="r"><span class="k-sell">خرید و فروش ${esc(s.asset)}</span><span class="big">${fa(s.amount)}</span></div>
+  <div class="r dim"><span>از ${esc(b.party)} (${fa(b.price)}) ← به ${esc(s.party)} (${fa(s.price)})</span><span>${pd(s.date)}</span></div>
+  <div class="r"><span class="${pf>=0?'green':'red'}" style="font-weight:600">سود شما: ${fa(pf)} تومان</span></div>
+  <div class="r">${remLine(s)}</div><div class="r">${remLine(b)}</div>
+  <div class="acts"><button data-a="paypair" data-id="${s.pairId}">پرداخت / دریافت</button><button data-a="editpair" data-id="${s.pairId}">ویرایش</button><button class="del" data-a="delpair" data-id="${s.pairId}">حذف</button></div></div>`;
+}
+function items(filter){
+  const seen=new Set(),out=[],f=nd(filter||'').toLowerCase();
+  [...S.tx].reverse().forEach(t=>{
+    if(t.pairId){
+      if(seen.has(t.pairId))return;seen.add(t.pairId);
+      const {b,s}=legs(t.pairId);if(!b||!s)return out.push(txCard(t));
+      if(!f||(b.party+s.party+s.asset).toLowerCase().includes(f))out.push(pairCard(b,s));
+    }else if(!f||(t.party+t.asset).toLowerCase().includes(f))out.push(txCard(t));
+  });
+  return out;
+}
+function count(){return S.tx.filter(t=>!t.pairId).length+new Set(S.tx.filter(t=>t.pairId).map(t=>t.pairId)).size}
 function render(){
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
-  $('#plist').innerHTML=[...new Set(S.tx.map(t=>t.party))].map(p=>`<option value="${p}">`).join('');
-  const s=stats(),L=[...S.tx].reverse();let h='';
+  $('#plist').innerHTML=[...new Set(S.tx.map(t=>t.party))].map(p=>`<option value="${esc(p)}">`).join('');
+  const s=stats();let h='';
   if(tab==='home'){
     h=`<div class="grid">
     <div class="stat"><small>کل طلبکاری</small><b class="${s.cred>0?'red':''}">${fa(s.cred)}</b><i>تومان</i></div>
     <div class="stat"><small>کل بدهی</small><b>${fa(s.debt)}</b><i>تومان</i></div>
     <div class="stat"><small>سود کل</small><b class="${s.pr>=0?'green':'red'}">${fa(s.pr)}</b><i>تومان</i></div>
-    <div class="stat"><small>تعداد معاملات</small><b>${fa(S.tx.length)}</b><i>&nbsp;</i></div></div>
-    <h2>آخرین تراکنش‌ها</h2>${L.slice(0,5).map(txCard).join('')||'<div class="empty">هنوز معامله‌ای ثبت نشده.</div>'}
-    <button class="cta" data-a="new">+ ثبت معامله جدید</button>`;
+    <div class="stat"><small>تعداد معاملات</small><b>${fa(count())}</b><i>&nbsp;</i></div></div>
+    <button class="cta" data-a="newpair" style="margin:0 0 4px">+ خرید و فروش هم‌زمان (واسطه‌گری)</button>
+    <button class="cta alt" data-a="new">+ ثبت خرید یا فروش تکی</button>
+    <h2>آخرین تراکنش‌ها</h2>${items().slice(0,5).join('')||'<div class="empty">هنوز معامله‌ای ثبت نشده.</div>'}`;
   }else if(tab==='txs'){
-    h=`<button class="cta" data-a="new" style="margin:0 0 14px">+ ثبت معامله جدید</button>`+(L.map(txCard).join('')||'<div class="empty">معامله‌ای نیست.</div>');
+    h=`<input id="q" placeholder="جستجو: نام طرف یا دارایی" value="${esc(q)}"><div id="list">${items(q).join('')||'<div class="empty">معامله‌ای نیست.</div>'}</div>`;
   }else if(tab==='parties'){
     const ks=Object.keys(s.par);
-    h=ks.map(k=>{const v=s.par[k];return `<div class="tx"><div class="r"><b>${k}</b><span class="big ${v>0?'red':v<0?'green':''}">${fa(Math.abs(v))} ت</span></div><div class="dim">${v>0?'از او طلبکارید':v<0?'به او بدهکارید':'تسویه'}</div></div>`}).join('')||'<div class="empty">هنوز طرفی ثبت نشده.</div>';
+    h=ks.map(k=>{const v=s.par[k];return `<div class="tx" data-a="party" data-name="${esc(k)}" style="cursor:pointer"><div class="r"><b>${esc(k)}</b><span class="big ${v>0.005?'red':v<-0.005?'green':''}">${fa(Math.abs(v))} ت</span></div><div class="dim">${v>0.005?'از او طلبکارید':v<-0.005?'به او بدهکارید':'تسویه'} — برای دیدن معاملات بزن</div></div>`}).join('')||'<div class="empty">هنوز طرفی ثبت نشده.</div>';
   }else{
     h=`<div class="grid"><div class="stat" style="grid-column:1/-1"><small>موجودی نقد صندوق</small><b class="${s.cash>=0?'green':'red'}">${fa(s.cash)}</b><i>تومان (دریافتی‌ها منهای پرداختی‌ها)</i></div>
     <div class="stat" style="grid-column:1/-1"><small>سود ثبت‌شده از معاملات</small><b class="green">${fa(s.pr)}</b><i>تومان</i></div></div>
-    <h2>موجودی دارایی‌ها</h2>`+(Object.keys(s.inv).map(k=>`<div class="tx"><div class="r"><b>${k}</b><span class="big">${fa(s.inv[k])}</span></div></div>`).join('')||'<div class="empty">موجودی‌ای نیست.</div>');
+    <h2>موجودی دارایی‌ها</h2>`+(Object.keys(s.inv).map(k=>`<div class="tx"><div class="r"><b>${esc(k)}</b><span class="big">${fa(s.inv[k])}</span></div></div>`).join('')||'<div class="empty">موجودی‌ای نیست.</div>')+
+    `<h2>پشتیبان‌گیری</h2><div class="note">اگر حافظه Safari پاک شود، اطلاعات از بین می‌رود. گاهی پشتیبان بگیر و در Notes نگه دار.</div>
+    <button class="cta alt" data-a="backup">کپی پشتیبان</button><button class="cta ghost" data-a="restore">بازیابی از پشتیبان</button>`;
   }
   $('#view').innerHTML=h;
 }
+function openSheet(){$('#modal').classList.add('on')}
+function closeSheet(){$('#modal').classList.remove('on')}
+
+/* ---------- simple trade ---------- */
 function openForm(id){
   editId=id;const t=S.tx.find(x=>x.id===id);
   form=t?{...t}:{type:'buy',asset:'دلار',party:'',amount:'',price:'',buyPrice:'',date:today(),link:''};
-  drawForm();$('#modal').classList.add('on');
+  drawForm();openSheet();
 }
 function drawForm(){
   const f=form,isS=f.type==='sell';
   const buys=S.tx.filter(t=>t.type==='buy'&&t.asset===f.asset&&t.id!==editId);
   $('#sheet').innerHTML=`<div class="seg"><button data-ty="buy" class="${!isS?'on':''}">خرید</button><button data-ty="sell" class="${isS?'on':''}">فروش</button></div>
-  <label>دارایی</label><input id="f_asset" list="assets" value="${f.asset}">
-  <label>طرف حساب</label><input id="f_party" list="plist" value="${f.party}">
+  <label>دارایی</label><input id="f_asset" list="assets" value="${esc(f.asset)}">
+  <label>طرف حساب</label><input id="f_party" list="plist" value="${esc(f.party)}">
   <div class="row2"><div><label>مقدار</label><input id="f_amount" class="num" inputmode="decimal" value="${f.amount}"></div>
   <div><label>قیمت واحد (تومان)</label><input id="f_price" class="num" inputmode="decimal" value="${f.price}"></div></div>
-  ${isS?`<label>از کدام خرید؟ (برای محاسبه سود)</label><select id="f_link"><option value="">انتخاب دستی</option>${buys.map(b=>`<option value="${b.id}" ${f.link==b.id?'selected':''}>${b.party} — ${fa(b.amount)} با قیمت ${fa(b.price)}</option>`).join('')}</select>
+  ${isS?`<label>از کدام خرید؟ (برای محاسبه سود)</label><select id="f_link"><option value="">انتخاب دستی</option>${buys.map(b=>`<option value="${b.id}" ${f.link==b.id?'selected':''}>${esc(b.party)} — ${fa(b.amount)} با قیمت ${fa(b.price)}</option>`).join('')}</select>
   <label>قیمت خرید واحد (تومان)</label><input id="f_buyPrice" class="num" inputmode="decimal" value="${f.buyPrice}">`:''}
   ${editId?'':`<label>پرداخت/دریافت نقدی همین الان (تومان)</label><input id="f_paid" class="num" inputmode="decimal" value="">`}
-  <label>تاریخ</label><input id="f_date" class="num" value="${f.date}">
+  <label>تاریخ</label><input id="f_date" class="num" value="${esc(f.date)}">
   <div class="prev" id="prev"></div>
-  <button class="cta" data-a="save">ذخیره</button><button class="cta" data-a="close" style="background:var(--card);color:var(--txt);font-weight:400">انصراف</button>`;
-  document.querySelectorAll('.num').forEach(i=>{if(i.id!=='f_date'){fmt(i)}});
-  prev();
+  <button class="cta" data-a="save">ذخیره</button><button class="cta ghost" data-a="close">انصراف</button>`;
+  fmtAll();prev();
 }
-function fmt(i){let v=nd(i.value).replace(/[^\d.]/g,'');let [a,b]=v.split('.');a=(a||'').replace(/\B(?=(\d{3})+(?!\d))/g,',');i.value=(a+(b!==undefined?'.'+b:'')).replace(/\d/g,d=>P[d]);}
 function prev(){
+  if(!$('#prev'))return;
+  if($('#p_amount')){return prevPair()}
   const a=num($('#f_amount').value),p=num($('#f_price').value),bp=$('#f_buyPrice')?num($('#f_buyPrice').value):0;
   let h=`مبلغ کل: <b>${fa(a*p)}</b> تومان`;
   if(form.type==='sell'&&bp)h+=`<br>سود این معامله: <b class="${p>=bp?'green':'red'}">${fa((p-bp)*a)}</b> تومان`;
@@ -143,24 +189,149 @@ function saveTx(){
   if(!form.asset||!form.party||form.amount<=0||form.price<=0){alert('دارایی، طرف حساب، مقدار و قیمت را وارد کن.');return}
   if(editId){const t=S.tx.find(x=>x.id===editId);Object.assign(t,{type:form.type,asset:form.asset,party:form.party,amount:form.amount,price:form.price,buyPrice:form.type==='sell'?form.buyPrice:0,date:form.date,link:form.link});}
   else{const p=num($('#f_paid').value);S.tx.push({id:Date.now(),type:form.type,asset:form.asset,party:form.party,amount:form.amount,price:form.price,buyPrice:form.type==='sell'?form.buyPrice:0,date:form.date,link:form.link,pays:p>0?[{amt:p,date:form.date}]:[]});}
-  save();$('#modal').classList.remove('on');render();
+  save();closeSheet();render();
 }
+
+/* ---------- pair (buy + sell at once) ---------- */
+function openPair(pid){
+  editId=pid||null;
+  if(pid){const {b,s}=legs(pid);form={asset:s.asset,amount:s.amount,bParty:b.party,bPrice:b.price,sParty:s.party,sPrice:s.price,date:s.date,mode:'0'};}
+  else form={asset:'دلار',amount:'',bParty:'',bPrice:'',sParty:'',sPrice:'',date:today(),mode:'0'};
+  drawPair();openSheet();
+}
+function drawPair(){
+  const f=form;
+  $('#sheet').innerHTML=`<h3>خرید و فروش هم‌زمان</h3><div class="note">مثلاً از تقی می‌خری، به نقی می‌فروشی. هر دو معامله با یک ذخیره ثبت می‌شوند.</div>
+  <label>دارایی</label><input id="p_asset" list="assets" value="${esc(f.asset)}">
+  <label>مقدار</label><input id="p_amount" class="num" inputmode="decimal" value="${f.amount}">
+  <div class="row2"><div><label>خرید از</label><input id="p_bParty" list="plist" value="${esc(f.bParty)}"></div>
+  <div><label>قیمت خرید</label><input id="p_bPrice" class="num" inputmode="decimal" value="${f.bPrice}"></div></div>
+  <div class="row2"><div><label>فروش به</label><input id="p_sParty" list="plist" value="${esc(f.sParty)}"></div>
+  <div><label>قیمت فروش</label><input id="p_sPrice" class="num" inputmode="decimal" value="${f.sPrice}"></div></div>
+  ${editId?'':`<label>وضعیت پرداخت</label><select id="p_mode"><option value="0">هنوز پرداخت نشده</option><option value="1">خریدار مستقیم به فروشنده پول را داد (کامل)</option><option value="2">پول از دست خودم رد شد (کامل)</option></select>`}
+  <label>تاریخ</label><input id="p_date" class="num" value="${esc(f.date)}">
+  <div class="prev" id="prev"></div>
+  <button class="cta" data-a="savepair">ذخیره</button><button class="cta ghost" data-a="close">انصراف</button>`;
+  fmtAll();prevPair();
+}
+function readPair(){
+  const g=id=>$('#'+id)?$('#'+id).value:'';
+  Object.assign(form,{asset:g('p_asset').trim(),amount:num(g('p_amount')),bParty:g('p_bParty').trim(),bPrice:num(g('p_bPrice')),sParty:g('p_sParty').trim(),sPrice:num(g('p_sPrice')),date:g('p_date'),mode:g('p_mode')||'0'});
+}
+function prevPair(){
+  const a=num($('#p_amount').value),bp=num($('#p_bPrice').value),sp=num($('#p_sPrice').value),pf=(sp-bp)*a;
+  let h=`مبلغ خرید: <b>${fa(a*bp)}</b> — مبلغ فروش: <b>${fa(a*sp)}</b><br>سود شما: <b class="${pf>=0?'green':'red'}">${fa(pf)}</b> تومان`;
+  const m=$('#p_mode')?$('#p_mode').value:'0';
+  if(m==='1')h+=`<br><span class="dim">خریدار کل مبلغ فروش را مستقیم به فروشنده می‌دهد؛ مبلغ اضافه (سود شما) پیش فروشنده می‌ماند و از او طلبکار می‌شوی.</span>`;
+  $('#prev').innerHTML=h;
+}
+function savePair(){
+  readPair();const f=form;
+  if(!f.asset||!f.bParty||!f.sParty||f.amount<=0||f.bPrice<=0||f.sPrice<=0){alert('همه فیلدها را پر کن: دارایی، مقدار، دو طرف و دو قیمت.');return}
+  if(editId){
+    const {b,s}=legs(editId);
+    Object.assign(b,{asset:f.asset,amount:f.amount,party:f.bParty,price:f.bPrice,date:f.date});
+    Object.assign(s,{asset:f.asset,amount:f.amount,party:f.sParty,price:f.sPrice,buyPrice:f.bPrice,date:f.date});
+  }else{
+    const id=Date.now(),sellTot=f.amount*f.sPrice,buyTot=f.amount*f.bPrice,m=f.mode;
+    const bp=m==='1'?[{amt:sellTot,date:f.date}]:m==='2'?[{amt:buyTot,date:f.date}]:[];
+    const sp=m==='0'?[]:[{amt:sellTot,date:f.date}];
+    S.tx.push({id,pairId:id,type:'buy',asset:f.asset,party:f.bParty,amount:f.amount,price:f.bPrice,buyPrice:0,date:f.date,pays:bp});
+    S.tx.push({id:id+1,pairId:id,type:'sell',asset:f.asset,party:f.sParty,amount:f.amount,price:f.sPrice,buyPrice:f.bPrice,date:f.date,pays:sp});
+  }
+  save();closeSheet();render();
+}
+
+/* ---------- payments ---------- */
+function openPay(id,isPair){
+  payCtx={id,isPair};
+  if(isPair){
+    const {b,s}=legs(id);
+    $('#sheet').innerHTML=`<h3>ثبت پرداخت یا دریافت</h3>
+    <label>نوع</label><select id="pp_type"><option value="d">${esc(s.party)} مستقیم به ${esc(b.party)} پرداخت کرد</option><option value="s">${esc(s.party)} به من پرداخت کرد</option><option value="b">من به ${esc(b.party)} پرداخت کردم</option></select>
+    <label>مبلغ (تومان)</label><input id="pp_amt" class="num" inputmode="decimal">
+    <div class="note" id="pp_note"></div>
+    <button class="cta" data-a="savepay">ذخیره</button><button class="cta ghost" data-a="close">انصراف</button>`;
+    ppFill();
+  }else{
+    const t=S.tx.find(x=>x.id===id);
+    $('#sheet').innerHTML=`<h3>${t.type==='sell'?'دریافت از':'پرداخت به'} ${esc(t.party)}</h3>
+    <label>مبلغ (تومان)</label><input id="pp_amt" class="num" inputmode="decimal" value="${Math.max(rem(t),0)}">
+    <div class="note">مانده فعلی: ${fa(rem(t))} تومان</div>
+    <button class="cta" data-a="savepay">ذخیره</button><button class="cta ghost" data-a="close">انصراف</button>`;
+    fmtAll();
+  }
+  openSheet();
+}
+function ppFill(){
+  const {b,s}=legs(payCtx.id),ty=$('#pp_type').value;
+  const v=ty==='b'?Math.max(rem(b),0):Math.max(rem(s),0);
+  $('#pp_amt').value=v||'';fmtAll();
+  $('#pp_note').textContent=ty==='d'?'مبلغ هم از بدهی خریدار کم می‌شود هم از بدهی شما به فروشنده. اگر بیشتر از قیمت خرید شما باشد، اضافه‌اش به‌عنوان طلب شما از فروشنده می‌ماند.':'';
+}
+function savePay(){
+  const v=num($('#pp_amt').value);if(v<=0){alert('مبلغ را وارد کن.');return}
+  const d=today();
+  if(payCtx.isPair){
+    const {b,s}=legs(payCtx.id),ty=$('#pp_type').value;
+    if(ty==='d'||ty==='s')s.pays.push({amt:v,date:d});
+    if(ty==='d'||ty==='b')b.pays.push({amt:v,date:d});
+  }else S.tx.find(x=>x.id===payCtx.id).pays.push({amt:v,date:d});
+  save();closeSheet();render();
+}
+
+/* ---------- backup ---------- */
+function backup(){
+  const j=JSON.stringify(S);
+  (navigator.clipboard?navigator.clipboard.writeText(j):Promise.reject()).then(()=>alert('پشتیبان کپی شد. در Notes بچسبان و نگه دار.'),()=>{
+    $('#sheet').innerHTML=`<h3>پشتیبان</h3><div class="note">همه متن را انتخاب و کپی کن.</div><textarea rows="10" dir="ltr" id="bk">${esc(j)}</textarea><button class="cta ghost" data-a="close">بستن</button>`;openSheet();});
+}
+function restore(){
+  $('#sheet').innerHTML=`<h3>بازیابی</h3><div class="note">متن پشتیبان را اینجا بچسبان. اطلاعات فعلی جایگزین می‌شود.</div><textarea rows="8" dir="ltr" id="rs"></textarea><button class="cta" data-a="dorestore">بازیابی</button><button class="cta ghost" data-a="close">انصراف</button>`;openSheet();
+}
+function doRestore(){
+  try{const o=JSON.parse($('#rs').value);if(!o||!Array.isArray(o.tx))throw 0;if(!confirm('اطلاعات فعلی با پشتیبان جایگزین شود؟'))return;S=o;save();closeSheet();render();}
+  catch(e){alert('متن پشتیبان معتبر نیست.')}
+}
+
+/* ---------- events ---------- */
+function fmt(i){let v=nd(i.value).replace(/[^\d.]/g,'');let [a,b]=v.split('.');a=(a||'').replace(/\B(?=(\d{3})+(?!\d))/g,',');i.value=pd(a+(b!==undefined?'.'+b:''));}
+function fmtAll(){document.querySelectorAll('#sheet .num').forEach(i=>{if(!/date$/.test(i.id))fmt(i)});}
 document.addEventListener('input',e=>{
-  if(e.target.classList.contains('num')&&e.target.id!=='f_date')fmt(e.target);
-  if(e.target.closest('#sheet')){if(e.target.id==='f_link'){const b=S.tx.find(x=>x.id==e.target.value);if(b){$('#f_buyPrice').value=b.price;fmt($('#f_buyPrice'))}}prev();}
+  const el=e.target;
+  if(el.id==='q'){q=el.value;$('#list').innerHTML=items(q).join('')||'<div class="empty">معامله‌ای نیست.</div>';return}
+  if(!el.closest('#sheet'))return;
+  if(el.classList.contains('num')&&!/date$/.test(el.id))fmt(el);
+  if(el.id==='f_link'){const b=S.tx.find(x=>x.id==el.value);if(b){$('#f_buyPrice').value=b.price;fmt($('#f_buyPrice'))}}
+  if($('#prev'))prev();
 });
-document.addEventListener('change',e=>{if(e.target.id==='f_asset'){read();drawForm()}});
+document.addEventListener('change',e=>{
+  if(e.target.id==='f_asset'){read();drawForm()}
+  if(e.target.id==='p_mode')prevPair();
+  if(e.target.id==='pp_type')ppFill();
+});
 document.addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.t){tab=b.dataset.t;render();return}
+  if(e.target.id==='modal'){closeSheet();return}
+  const b=e.target.closest('[data-a],[data-t],[data-ty]');if(!b)return;
+  if(b.dataset.t){tab=b.dataset.t;if(tab!=='txs')q='';render();return}
   if(b.dataset.ty){read();form.type=b.dataset.ty;drawForm();return}
   const a=b.dataset.a,id=+b.dataset.id;
   if(a==='new')openForm(null);
-  else if(a==='close')$('#modal').classList.remove('on');
+  else if(a==='newpair')openPair(null);
+  else if(a==='close')closeSheet();
   else if(a==='save')saveTx();
+  else if(a==='savepair')savePair();
+  else if(a==='savepay')savePay();
   else if(a==='edit')openForm(id);
+  else if(a==='editpair')openPair(id);
+  else if(a==='pay')openPay(id,false);
+  else if(a==='paypair')openPay(id,true);
+  else if(a==='party'){q=b.dataset.name;tab='txs';render();}
+  else if(a==='backup')backup();
+  else if(a==='restore')restore();
+  else if(a==='dorestore')doRestore();
   else if(a==='del'){if(confirm('این معامله حذف شود؟ این کار قابل بازگشت نیست.')){S.tx=S.tx.filter(x=>x.id!==id);save();render();}}
-  else if(a==='pay'){const t=S.tx.find(x=>x.id===id);const v=num(prompt('مبلغ (تومان) — مانده: '+fa(rem(t))));if(v>0){t.pays.push({amt:v,date:today()});save();render();}}
+  else if(a==='delpair'){if(confirm('این خرید و فروش هم‌زمان (هر دو معامله) حذف شود؟ این کار قابل بازگشت نیست.')){S.tx=S.tx.filter(x=>x.pairId!==id);save();render();}}
 });
 render();
 </script>
